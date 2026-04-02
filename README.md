@@ -20,19 +20,20 @@ Users can register, log in, create posts with text and images, like and unlike p
 
 ---
 
-## Quick Start
+## Running the Project
 
-### Prerequisites
+There are two ways to run Threadline — with Docker (recommended, zero setup) or locally (requires PostgreSQL, Python 3.12+, and Node 20+).
 
-- [Docker](https://docs.docker.com/get-docker/) and [Docker Compose v2](https://docs.docker.com/compose/install/)
-- `make` (pre-installed on macOS/Linux; Windows: use [WSL2](https://learn.microsoft.com/en-us/windows/wsl/) or [Git Bash](https://gitforwindows.org/))
+---
 
-### 1. Clone and configure
+### Option A — Docker (recommended)
+
+**Prerequisites:** [Docker](https://docs.docker.com/get-docker/) + [Docker Compose v2](https://docs.docker.com/compose/install/)
 
 ```bash
 git clone https://github.com/Motssembillahmahin/threadline.git
 cd threadline
-make setup        # creates .env from .env.example
+make setup          # creates .env from .env.example
 ```
 
 Open `.env` and fill in your secrets:
@@ -43,15 +44,51 @@ ACCESS_SECRET=your_access_token_secret_min_32_chars
 REFRESH_SECRET=your_refresh_token_secret_min_32_chars
 ```
 
-### 2. Build and start
-
 ```bash
-make up
+make up             # builds images, starts containers, runs migrations
 ```
 
-This builds all three Docker images, starts the containers, and runs Alembic migrations automatically. On first run it takes ~2–3 minutes.
+First run takes ~2–3 minutes. Done.
 
-### 3. Open the app
+---
+
+### Option B — Local (without Docker)
+
+**Prerequisites:** PostgreSQL 16, Python 3.12+, Node 20+
+
+```bash
+git clone https://github.com/Motssembillahmahin/threadline.git
+cd threadline
+make local-setup    # creates venv, installs deps, copies env files
+```
+
+Edit `backend/.env` — set your local PostgreSQL connection and secrets:
+
+```env
+DATABASE_URL=postgresql+asyncpg://postgres:password@localhost:5432/threadline
+ACCESS_SECRET=your_access_token_secret_min_32_chars
+REFRESH_SECRET=your_refresh_token_secret_min_32_chars
+UPLOAD_DIR=app/static/uploads
+CORS_ORIGINS=http://localhost:3000
+```
+
+Create the database, run migrations, then start both servers (two terminals):
+
+```bash
+# Terminal 1
+createdb threadline      # or: psql -U postgres -c "CREATE DATABASE threadline"
+make local-migrate       # runs alembic upgrade head
+
+# Terminal 2
+make local-backend       # FastAPI on http://localhost:8000
+
+# Terminal 3
+make local-frontend      # Next.js on http://localhost:3000
+```
+
+---
+
+### Services
 
 | Service | URL |
 |---|---|
@@ -63,8 +100,9 @@ This builds all three Docker images, starts the containers, and runs Alembic mig
 
 ## Make Commands
 
+**Docker**
 ```
-make setup           Copy .env.example → .env (first-time setup)
+make setup           Copy .env.example → .env
 make up              Build images and start all services (detached)
 make down            Stop and remove containers
 make restart         Restart all services
@@ -78,6 +116,14 @@ make db-shell        Open psql shell in the db container
 make backend-shell   Open bash shell in the backend container
 make frontend-shell  Open sh shell in the frontend container
 make clean           Remove containers, images, and volumes (destructive)
+```
+
+**Local**
+```
+make local-setup     Install Python venv + npm deps + copy env files
+make local-migrate   Run Alembic migrations against local PostgreSQL
+make local-backend   Start FastAPI dev server on :8000
+make local-frontend  Start Next.js dev server on :3000
 ```
 
 ---
@@ -167,19 +213,27 @@ Cursor pagination over OFFSET, denormalized counters, httpOnly cookies over loca
 
 ## Development Notes
 
-The backend runs migrations automatically on container start (`alembic upgrade head` before Uvicorn). This means you can reset the database volume and restart to get a clean state:
-
+**Docker — reset to clean state:**
 ```bash
-make clean    # removes volumes (data is lost)
+make clean    # removes containers and volumes (data is lost)
 make up       # fresh start, migrations run automatically
 ```
 
-To inspect the database directly:
+**Local — reset database:**
+```bash
+dropdb threadline && createdb threadline
+make local-migrate
+```
 
+**Inspect the database (Docker):**
 ```bash
 make db-shell
 # inside psql:
-\dt                        -- list tables
-SELECT * FROM users;
+\dt
 SELECT id, content, like_count FROM posts ORDER BY created_at DESC LIMIT 5;
+```
+
+**Inspect the database (local):**
+```bash
+psql -U postgres -d threadline
 ```
