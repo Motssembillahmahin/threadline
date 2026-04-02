@@ -4,6 +4,7 @@ from fastapi.staticfiles import StaticFiles
 import os
 
 from app.config import settings
+from app.routers import auth
 
 app = FastAPI(title="Threadline API")
 
@@ -17,6 +18,9 @@ app.add_middleware(
 
 os.makedirs(settings.UPLOAD_DIR, exist_ok=True)
 app.mount("/static/uploads", StaticFiles(directory=settings.UPLOAD_DIR), name="uploads")
+
+
+app.include_router(auth.router)
 
 
 @app.get("/api/health")
