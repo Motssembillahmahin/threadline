@@ -1,7 +1,6 @@
 # Threadline
 
-A full-stack social feed platform built as the Appifylab Full Stack Engineer selection task.
-
+A full-stack social feed platform.
 Users can register, log in, create posts with text and images, like and unlike posts/comments/replies, comment, reply, and control who sees their content with public/private visibility. The UI is a pixel-perfect conversion of three provided static HTML/CSS files into a production-ready React application.
 
 ---
