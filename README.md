@@ -151,23 +151,7 @@ threadline/
 
 ## Design Decisions
 
-### Why cursor-based pagination?
-
-`OFFSET N` forces PostgreSQL to scan and discard N rows on every request. At page 100 of a busy feed, that's 1,000+ wasted row reads. Cursor pagination (`WHERE created_at < :cursor LIMIT 10`) resolves in O(log n) time using the B-tree index on `created_at`, regardless of how many total posts exist.
-
-See [docs/scalability.md](./docs/scalability.md) for the full analysis.
-
-### Why denormalized like/comment counts?
-
-Aggregating `COUNT(*)` on every feed render means one extra query per post. For a 10-post page that's 10 extra round-trips. `like_count` and `comment_count` are stored directly on the post row and updated atomically in the same transaction as the like/comment write. Feed reads stay at one query.
-
-### Why httpOnly cookies instead of localStorage?
-
-Tokens in localStorage are accessible to any JavaScript on the page, including injected scripts. httpOnly cookies cannot be read by JavaScript at all — they are sent automatically by the browser and are invisible to XSS attacks. Combined with `samesite=lax`, they also resist CSRF.
-
-### How was the original design preserved?
-
-The four original CSS files are imported unchanged in `globals.css`. Every JSX component uses the exact class names from the original HTML. No Tailwind, no CSS Modules, no renaming. See [docs/html-to-nextjs.md](./docs/html-to-nextjs.md) for the full conversion guide.
+Cursor pagination over OFFSET, denormalized counters, httpOnly cookies over localStorage, and pixel-perfect HTML/CSS preservation — see [docs/](./docs/index.md) for the full rationale.
 
 ---
 
