@@ -4,7 +4,7 @@ from fastapi.staticfiles import StaticFiles
 import os
 
 from app.config import settings
-from app.routers import auth, posts
+from app.routers import auth, posts, comments, replies, likes
 
 app = FastAPI(title="Threadline API")
 
@@ -22,6 +22,9 @@ app.mount("/static/uploads", StaticFiles(directory=settings.UPLOAD_DIR), name="u
 
 app.include_router(auth.router)
 app.include_router(posts.router)
+app.include_router(comments.router)
+app.include_router(replies.router)
+app.include_router(likes.router)
 
 
 @app.get("/api/health")
