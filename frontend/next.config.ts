@@ -16,6 +16,12 @@ const nextConfig: NextConfig = {
         port: "8000",
         pathname: "/static/uploads/**",
       },
+      {
+        // Cloudinary CDN — used in production
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+        pathname: "/**",
+      },
     ],
   },
   async rewrites() {
