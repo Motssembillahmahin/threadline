@@ -22,7 +22,14 @@ export default function PostCard({ post }: Props) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const isOwner = user?.id === post.author.id;
 
-  const mediaBaseUrl = process.env.NEXT_PUBLIC_MEDIA_URL?.replace("/static/uploads", "") || "http://localhost:8000";
+  function resolveImageUrl(url: string | null): string | null {
+    if (!url) return null;
+    // Cloudinary and any other absolute URLs are used directly
+    if (url.startsWith("http")) return url;
+    // Local / Docker: relative path like /static/uploads/xxx.jpg
+    const base = process.env.NEXT_PUBLIC_MEDIA_URL?.replace("/static/uploads", "") || "http://localhost:8000";
+    return `${base}${url}`;
+  }
 
   async function toggleLike() {
     const prev = liked;
@@ -121,7 +128,7 @@ export default function PostCard({ post }: Props) {
         {post.image_url && (
           <div className="_feed_inner_timeline_image">
             <img
-              src={`${mediaBaseUrl}${post.image_url}`}
+              src={resolveImageUrl(post.image_url) ?? ""}
               alt="post"
               className="_time_img"
               style={{ maxWidth: "100%", borderRadius: 8 }}
