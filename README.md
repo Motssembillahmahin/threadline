@@ -208,6 +208,7 @@ Cursor pagination over OFFSET, denormalized counters, httpOnly cookies over loca
 | [Scalability](./docs/scalability.md) | How the system handles millions of posts |
 | [Frontend Workflow](./docs/frontend-workflow.md) | Auth flow, React Query, optimistic updates |
 | [HTML to Next.js](./docs/html-to-nextjs.md) | How the static design was converted to Next.js |
+| [Deployment](./docs/deployment.md) | Free hosting — Vercel + Render + Supabase + Cloudinary |
 
 ---
 
