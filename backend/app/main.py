@@ -6,7 +6,7 @@ import os
 from app.config import settings
 from app.routers import auth, posts, comments, replies, likes
 
-app = FastAPI(title="Threadline API")
+app = FastAPI(title="Threadline API", redirect_slashes=False)
 
 app.add_middleware(
     CORSMiddleware,
