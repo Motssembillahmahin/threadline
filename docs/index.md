@@ -6,3 +6,4 @@
 | [Scalability](./scalability.md) | How the system handles millions of posts — cursor pagination, denormalized counters, indexes, async I/O |
 | [Frontend Workflow](./frontend-workflow.md) | Bootstrap sequence, AuthContext, silent token refresh, React Query, optimistic updates, component tree |
 | [HTML to Next.js](./html-to-nextjs.md) | Step-by-step guide: how the original static HTML/CSS/JS design was preserved exactly while converting to Next.js |
+| [Deployment](./deployment.md) | Free hosting on Vercel + Render + Supabase + Cloudinary — step-by-step with env var reference |

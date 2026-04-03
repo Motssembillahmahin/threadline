@@ -7,6 +7,14 @@ class Settings(BaseSettings):
     REFRESH_SECRET: str
     UPLOAD_DIR: str = "/app/static/uploads"
     CORS_ORIGINS: str = "http://localhost:3000"
+    # "development" | "production"
+    ENVIRONMENT: str = "development"
+    # Set to enable Cloudinary uploads (leave empty to use local storage)
+    CLOUDINARY_URL: str = ""
+
+    @property
+    def is_production(self) -> bool:
+        return self.ENVIRONMENT == "production"
 
     @property
     def cors_origins_list(self) -> list[str]:
