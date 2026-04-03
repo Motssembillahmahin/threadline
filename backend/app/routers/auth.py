@@ -2,6 +2,7 @@ from fastapi import APIRouter, Cookie, Depends, HTTPException, Response, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlmodel import select
 
+from app.config import settings
 from app.database import get_session
 from app.middleware.auth_middleware import get_current_user
 from app.models.user import User
@@ -16,7 +17,13 @@ from app.services.auth_service import (
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
 
-_COOKIE_OPTS = dict(httponly=True, samesite="lax", secure=False)
+# In production (cross-origin): samesite=none + secure=True required for
+# httpOnly cookies to be sent across different domains (e.g. Vercel → Render).
+_COOKIE_OPTS = dict(
+    httponly=True,
+    samesite="none" if settings.is_production else "lax",
+    secure=settings.is_production,
+)
 
 
 def _set_auth_cookies(response: Response, user: User) -> None:
