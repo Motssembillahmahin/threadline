@@ -1,0 +1,13 @@
+/* Prevent layout shift when scrollbar appears/disappears in the feed column */
+._layout_middle_wrap,
+._layout_left_sidebar_wrap,
+._layout_right_sidebar_wrap {
+  overflow-y: scroll;
+  scrollbar-gutter: stable;
+}
+
+/* Hide scrollbar visually but keep it in the gutter (Webkit browsers) */
+._layout_left_sidebar_wrap::-webkit-scrollbar,
+._layout_right_sidebar_wrap::-webkit-scrollbar {
+  width: 0;
+}
