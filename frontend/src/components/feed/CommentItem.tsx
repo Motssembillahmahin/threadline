@@ -39,6 +39,15 @@ export default function CommentItem({ comment }: Props) {
     }
   }
 
+  function timeAgo(isoDate: string) {
+    const diff = Date.now() - new Date(isoDate).getTime();
+    const mins = Math.floor(diff / 60000);
+    if (mins < 60) return `${mins}m`;
+    const hrs = Math.floor(mins / 60);
+    if (hrs < 24) return `${hrs}h`;
+    return `${Math.floor(hrs / 24)}d ago`;
+  }
+
   async function submitReply(e: React.FormEvent) {
     e.preventDefault();
     if (!replyText.trim()) return;
@@ -95,7 +104,7 @@ export default function CommentItem({ comment }: Props) {
                     Reply.
                   </span>
                 </li>
-                <li><span className="_time_link">.{new Date(comment.created_at).toLocaleDateString()}</span></li>
+                <li><span className="_time_link">.{timeAgo(comment.created_at)}</span></li>
               </ul>
             </div>
           </div>
