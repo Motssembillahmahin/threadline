@@ -1,4 +1,17 @@
-/* Prevent layout shift when scrollbar appears/disappears in the feed column */
+/* Fix: scope post card transition to background only — prevents accidental
+   position/margin/transform animations from child hover states */
+._feed_inner_timeline_post_area {
+  transition: background-color 0.2s ease !important;
+  transform: translateZ(0); /* force compositing layer — prevents subpixel shift */
+  will-change: auto;
+}
+
+/* Fix: same scope for sidebar cards */
+._feed_inner_area {
+  transition: background-color 0.2s ease !important;
+}
+
+/* Fix: always reserve scrollbar gutter so column width never changes */
 ._layout_middle_wrap,
 ._layout_left_sidebar_wrap,
 ._layout_right_sidebar_wrap {
@@ -6,7 +19,6 @@
   scrollbar-gutter: stable;
 }
 
-/* Hide scrollbar visually but keep it in the gutter (Webkit browsers) */
 ._layout_left_sidebar_wrap::-webkit-scrollbar,
 ._layout_right_sidebar_wrap::-webkit-scrollbar {
   width: 0;
