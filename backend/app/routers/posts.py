@@ -40,7 +40,7 @@ async def _build_response(post: Post, author: User, current_user: User, session:
     )
 
 
-@router.get("/", response_model=List[PostResponse])
+@router.get("", response_model=List[PostResponse])
 async def get_feed(
     cursor: Optional[str] = Query(default=None),
     limit: int = Query(default=10, le=50),
@@ -69,7 +69,7 @@ async def get_feed(
     return posts
 
 
-@router.post("/", response_model=PostResponse, status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=PostResponse, status_code=status.HTTP_201_CREATED)
 async def create_post(
     content: Optional[str] = Form(default=None),
     visibility: str = Form(default="public"),
