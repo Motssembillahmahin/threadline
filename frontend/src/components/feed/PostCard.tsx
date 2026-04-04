@@ -5,7 +5,9 @@ import api from "@/lib/api";
 import { Post } from "@/types";
 import { useAuth } from "@/context/AuthContext";
 import { useDeletePost } from "@/hooks/usePosts";
+import { useComments } from "@/hooks/useComments";
 import CommentSection from "./CommentSection";
+import CommentItem from "./CommentItem";
 import WhoLikedModal from "./WhoLikedModal";
 
 interface Props {
@@ -21,6 +23,10 @@ export default function PostCard({ post }: Props) {
   const [showLikedModal, setShowLikedModal] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const isOwner = user?.id === post.author.id;
+
+  const { data: comments } = useComments(post.id, post.comment_count > 0);
+  const latestComment = comments?.[comments.length - 1];
+  const previousCount = post.comment_count - 1;
 
   function resolveImageUrl(url: string | null): string | null {
     if (!url) return null;
@@ -192,6 +198,22 @@ export default function PostCard({ post }: Props) {
           </span>
         </button>
       </div>
+      {!showComments && latestComment && (
+        <div className="_timline_comment_main _padd_r24 _padd_l24">
+          {previousCount > 0 && (
+            <div className="_previous_comment">
+              <button
+                type="button"
+                className="_previous_comment_txt"
+                onClick={() => setShowComments(true)}
+              >
+                View {previousCount} previous comment{previousCount !== 1 ? "s" : ""}
+              </button>
+            </div>
+          )}
+          <CommentItem comment={latestComment} />
+        </div>
+      )}
       {showComments && <CommentSection postId={post.id} />}
       {showLikedModal && (
         <WhoLikedModal targetType="post" targetId={post.id} onClose={() => setShowLikedModal(false)} />
