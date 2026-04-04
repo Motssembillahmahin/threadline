@@ -1,7 +1,7 @@
 .PHONY: help up down restart logs build clean \
         backend-shell frontend-shell db-shell \
         migrate migrate-down \
-        setup \
+        setup seed seed-prod \
         local-setup local-backend local-frontend local-migrate
 
 # ─── Colours ─────────────────────────────────────────────────────────────────
@@ -36,6 +36,10 @@ help:
 	@echo "  $(CYAN)make local-migrate$(RESET)   Run Alembic migrations against local PostgreSQL"
 	@echo "  $(CYAN)make local-backend$(RESET)   Start FastAPI dev server on :8000"
 	@echo "  $(CYAN)make local-frontend$(RESET)  Start Next.js dev server on :3000"
+	@echo ""
+	@echo "  $(BOLD)── Seed data ────────────────────────────────────────$(RESET)"
+	@echo "  $(CYAN)make seed$(RESET)            Seed demo data into local dev server"
+	@echo "  $(CYAN)make seed-prod URL=...$(RESET)  Seed demo data into production"
 	@echo ""
 
 # ─── First-time setup ─────────────────────────────────────────────────────────
@@ -123,6 +127,14 @@ local-backend:
 
 local-frontend:
 	cd frontend && npm run dev
+
+# ─── Demo seed data ───────────────────────────────────────────────────────────
+seed:
+	cd backend && ./venv/bin/python seed.py --base-url http://localhost:8000
+
+seed-prod:
+	@if [ -z "$(URL)" ]; then echo "Usage: make seed-prod URL=https://your-backend.onrender.com"; exit 1; fi
+	cd backend && python3 seed.py --base-url $(URL)
 
 # ─── Cleanup ──────────────────────────────────────────────────────────────────
 clean:
