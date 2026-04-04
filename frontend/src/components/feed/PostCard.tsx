@@ -137,13 +137,21 @@ export default function PostCard({ post }: Props) {
         )}
       </div>
       <div className="_feed_inner_timeline_total_reacts _padd_r24 _padd_l24 _mar_b26">
-        <div className="_feed_inner_timeline_total_reacts_image">
+        <div className="_feed_inner_timeline_total_reacts_image" style={{ cursor: likeCount > 0 ? "pointer" : "default" }} onClick={() => likeCount > 0 && setShowLikedModal(true)}>
+          {likeCount > 0 && (
+            <>
+              <img src="/assets/images/react_img1.png" alt="" className="_react_img1" />
+              {likeCount > 1 && <img src="/assets/images/react_img2.png" alt="" className="_react_img" />}
+              {likeCount > 2 && <img src="/assets/images/react_img3.png" alt="" className="_react_img _rect_img_mbl_none" />}
+              {likeCount > 3 && <img src="/assets/images/react_img4.png" alt="" className="_react_img _rect_img_mbl_none" />}
+              {likeCount > 4 && <img src="/assets/images/react_img5.png" alt="" className="_react_img _rect_img_mbl_none" />}
+            </>
+          )}
           <p
             className="_feed_inner_timeline_total_reacts_para"
-            style={{ cursor: "pointer" }}
-            onClick={() => setShowLikedModal(true)}
+            style={{ cursor: likeCount > 0 ? "pointer" : "default" }}
           >
-            {likeCount}
+            {likeCount > 0 ? likeCount : ""}
           </p>
         </div>
         <div className="_feed_inner_timeline_total_reacts_txt">

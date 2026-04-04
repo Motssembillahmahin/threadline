@@ -56,7 +56,7 @@ async def get_feed(
         )
     )
     if cursor:
-        cursor_dt = datetime.fromisoformat(cursor)
+        cursor_dt = datetime.fromisoformat(cursor.replace("Z", "+00:00")).replace(tzinfo=None)
         stmt = stmt.where(Post.created_at < cursor_dt)
 
     stmt = stmt.order_by(Post.created_at.desc()).limit(limit)
