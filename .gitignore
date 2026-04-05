@@ -49,3 +49,6 @@ backend/app/static/uploads/*
 
 # Alembic — keep versions, ignore pyc
 alembic/__pycache__/
+
+# Local-only docs
+docs/deployment.md
